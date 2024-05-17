@@ -1,7 +1,37 @@
 #include <cstdint>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <string.h>
+
+void decimal_to_hex(uint32_t decimal, char* hex_str, size_t hex_str_size)
+{
+    if (hex_str_size < 9) {
+        std::cerr << "Hex string buffer is too small." << std::endl;
+        return;
+    }
+
+    std::stringstream ss;
+    ss << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << decimal;
+
+    std::string hex = ss.str();
+    strncpy(hex_str, hex.c_str(), hex_str_size - 1);
+    hex_str[hex_str_size - 1] = '\0'; // Ensure null-termination
+}
+
+void convert_to_little_endian(char* hex_str)
+{
+    size_t len = strlen(hex_str);
+    if (len % 2 != 0) {
+        std::cerr << "Hex string length should be even." << std::endl;
+        return;
+    }
+
+    for (size_t i = 0; i < len / 2; i += 2) {
+        std::swap(hex_str[i], hex_str[len - 2 - i]);
+        std::swap(hex_str[i + 1], hex_str[len - 1 - i]);
+    }
+}
 
 void print_bytes(const unsigned char *data, size_t dataLen, bool format = true) {
     for(size_t i = 0; i < dataLen; ++i) {
