@@ -10,20 +10,25 @@
 int main()
 {
     // 10th Block info
-    char version[] = "01000000";
-    char prevhash[] = "0508085C47CC849EB80EA905CC7800A3BE674FFC57263CF210C59D8D00000000";
-    char merkle_root[] = "112BA175A1E04B14BA9E7EA5F76AB640AFFEEF5EC98173AC9799A852FA39ADD3";
+    char version[9]; // 8 characters for hex + 1 for null-terminator
+    char prevhash[] = "000000008d9dc510f23c2657fc4f67bea30078cc05a90eb89e84cc475c080805";
+    char merkle_root[] = "d3ad39fa52a89997ac7381c95eeffeaf40b66af7a57e9eba144be0a175a12b11";
     char time[9]; // 8 characters for hex + 1 for null-terminator
-    char nbits[] = "FFFF001D";
+    char nbits[9]; // 8 characters for hex + 1 for null-terminator
 
+    uint32_t decimal_version = 1;
     uint32_t decimal_time = 1231473952;
+    uint32_t decimal_nbits = 486604799;
+
+    decimal_to_hex(decimal_version, version, sizeof(version));
     decimal_to_hex(decimal_time, time, sizeof(time));
+    decimal_to_hex(decimal_nbits, nbits, sizeof(nbits));
 
-    std::cout << "Time in hex (big-endian): " << time << std::endl;
-
+    convert_to_little_endian(version);
+    convert_to_little_endian(prevhash);
+    convert_to_little_endian(merkle_root);
     convert_to_little_endian(time);
-
-    std::cout << "Time in hex (little-endian): " << time << std::endl;
+    convert_to_little_endian(nbits);
 
     uint32_t result[8];
     uint32_t start_nonce = 1709517110;
